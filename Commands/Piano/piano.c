@@ -45,17 +45,31 @@ void    ft_getdir(char dir[20][20])
     system("rm tmp");
 }
 
+int     ft_dirlen(char dir[20][20])
+{
+    int     i;
+
+    i = 0;
+    while (dir[i][0] != 0)
+        i++;
+    return (i - 1);
+}
+
 int     main(void)
 {
     char    dir[20][20];
     int     i;
     int     c;
+    int     last;
     int     cur;
+    int     dirlen;
    
     i = 0;
     c = 0;
+    last = 49;
     cur = 0;
     ft_getdir(dir);
+    dirlen = ft_dirlen(dir);
     system("clear");
     while (dir[i][0] != 0)
     {
@@ -70,16 +84,24 @@ int     main(void)
             i++;
         }
     }
+    system("stty cbreak");
     i = 0;
-    while (1)
+    while (c != 27)
     {
         c = getchar();
-        system("clear");
-        printf("c = %d", c);
-        if (c > cur)
+        if (c > last && cur == dirlen)
+            cur = 0;   
+        else if (c < last && cur == 0)
+            cur = dirlen;
+        else if (c > last)
             cur++;
+        else if (c == last)
+            cur = cur;
         else
             cur--;
+        last = c;
+        system("clear");
+        printf("dirlen = %d cur = %d c = %d last = %d\n", dirlen, cur, c, last);
         while (dir[i][0] != 0)
         {
             if (i == cur)
