@@ -42,7 +42,7 @@ void    ft_getdir(char dir[20][20])
     }
     dir[i][j] = 0;
     fclose(file);
-    system("rm tmp");
+    //system("rm tmp");
 }
 
 int     ft_dirlen(char dir[20][20])
@@ -63,9 +63,10 @@ int     main(void)
     int     last;
     int     cur;
     int     dirlen;
+    char    *curdir;
    
     i = 0;
-    c = 0;
+    c = 49;
     last = 49;
     cur = 0;
     ft_getdir(dir);
@@ -89,6 +90,16 @@ int     main(void)
     while (c != 27)
     {
         c = getchar();
+        if (c == 32)
+        {
+            chdir(dir[cur]);
+            ft_getdir(dir);
+            dirlen = ft_dirlen(dir);
+            last = 49;
+            c = 49;
+            cur = 0;
+            system("clear");
+        }
         if (c > last && cur == dirlen)
             cur = 0;   
         else if (c < last && cur == 0)
@@ -101,7 +112,6 @@ int     main(void)
             cur--;
         last = c;
         system("clear");
-        printf("dirlen = %d cur = %d c = %d last = %d\n", dirlen, cur, c, last);
         while (dir[i][0] != 0)
         {
             if (i == cur)
