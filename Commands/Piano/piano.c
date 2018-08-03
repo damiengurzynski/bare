@@ -49,6 +49,33 @@ void    ft_getdir(char dir[20][20])
     system("rm .tmp");
 }
 
+void    ft_readfile(char *str)
+{
+    FILE *file;
+    int     c;
+    
+    printf("%s\n", str);
+    file = fopen(str, "r");
+    while ((c = getc(file)) != EOF)
+    {
+        printf("%c", c);
+    }
+    fclose(file);
+}
+
+int    ft_iffold(char *str)
+{
+    int     i;
+
+    i = 0;
+    while (str[i] != '\0')
+        i++;
+    if (str[i - 1] == '/')
+        return (1);
+    else
+        return (0);
+}
+
 int     ft_dirlen(char dir[20][20])
 {
     int     i;
@@ -68,9 +95,11 @@ int     main(void)
     int     cur;
     int     dirlen;
     char    *curdir;
+    int     iffile;
    
     i = 0;
     c = 0;
+    iffile = 0;
     last = 0;
     cur = 0;
     ft_getdir(dir);
@@ -96,13 +125,20 @@ int     main(void)
         c = getchar();
         if (c == 32)
         {
-            chdir(dir[cur]);
-            ft_getdir(dir);
-            dirlen = ft_dirlen(dir);
-            last = 49;
-            c = 49;
-            cur = 0;
-            system("clear");
+            if (ft_iffold(dir[cur]) == 1)
+            {
+                chdir(dir[cur]);
+                ft_getdir(dir);
+                dirlen = ft_dirlen(dir);
+                last = 49;
+                c = 49;
+                cur = 0;
+                system("clear");
+            }
+            else
+            {
+                iffile = 1;
+            }
         }
         else if (c > last && cur == dirlen)
             cur = 0;   
@@ -116,20 +152,30 @@ int     main(void)
             cur--;
         system("clear");
         last = c;
-        while (dir[i][0] != 0)
+
+        if (iffile == 1)
         {
-            if (i == cur)
-            {
-                printf("%s%s%s\n", ft_col(1), dir[i], ft_col(0));
-                i++;
-            }
-            else
-            {
-                printf("%s\n", dir[i]);
-                i++;
-            }
+            ft_readfile(dir[cur]);
+            iffile = 0;
+            printf("\n<press enter to exit>");
         }
-        i = 0;
+        else
+        {
+            while (dir[i][0] != 0)
+            {
+                if (i == cur)
+                {
+                    printf("%s%s%s\n", ft_col(1), dir[i], ft_col(0));
+                    i++;
+                }
+                else
+                {
+                   printf("%s\n", dir[i]);
+                    i++;
+                }
+            }
+            i = 0;
+        }
     }
 }
 
