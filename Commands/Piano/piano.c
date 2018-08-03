@@ -2,6 +2,19 @@
 #include <stdio.h>
 #include <unistd.h>
 
+char    *ft_col(int i)
+{
+    char    *inv;
+    char    *def;
+    
+    inv = "\e[7m";
+    def = "\e[27m";
+    if (i == 1)
+        return (inv);
+    else
+        return (def);
+}
+
 void    ft_getdir(char dir[20][20])
 {
     FILE    *file;
@@ -17,6 +30,7 @@ void    ft_getdir(char dir[20][20])
     {
         if (c == '\n')
         {
+            dir[i][j] = '\0';
             i++;
             j = 0;
         }
@@ -26,20 +40,66 @@ void    ft_getdir(char dir[20][20])
             j++;
         }
     }
+    dir[i][j] = 0;
     fclose(file);
     system("rm tmp");
 }
 
 int     main(void)
 {
-    char    *co_inv;
-    char    *co_def;
     char    dir[20][20];
-    
-    co_inv = "\e[7m";
-    co_def = "\e[27m";
-//    printf("%sWENK%s\n", co_inv, co_def);
+    int     i;
+    int     c;
+    int     cur;
+   
+    i = 0;
+    c = 0;
+    cur = 0;
     ft_getdir(dir);
-    printf("%c\n", dir[2][0]);
-    return (0);
+    system("clear");
+    while (dir[i][0] != 0)
+    {
+        if (i == cur)
+        {
+            printf("%s%s%s\n", ft_col(1), dir[i], ft_col(0));
+            i++;
+        }
+        else
+        {
+            printf("%s\n", dir[i]);
+            i++;
+        }
+    }
+    i = 0;
+    while (1)
+    {
+        c = getchar();
+        system("clear");
+        printf("c = %d", c);
+        if (c > cur)
+            cur++;
+        else
+            cur--;
+        while (dir[i][0] != 0)
+        {
+            if (i == cur)
+            {
+                printf("%s%s%s\n", ft_col(1), dir[i], ft_col(0));
+                i++;
+            }
+            else
+            {
+                printf("%s\n", dir[i]);
+                i++;
+            }
+        }
+        i = 0;
+    }
 }
+
+
+
+
+
+
+
