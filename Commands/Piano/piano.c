@@ -22,10 +22,14 @@ void    ft_getdir(char dir[20][20])
     int     i;
     int     j;
 
-    i = 0;
+    dir[0][0] = '.';
+    dir[0][1] = '.';
+    dir[0][2] = '/';
+    dir[0][3] = '\0';
+    i = 1;
     j = 0;
-    system("ls > tmp");
-    file = fopen("tmp", "r");
+    system("ls -p > .tmp");
+    file = fopen(".tmp", "r");
     while ((c = getc(file)) != EOF)
     {
         if (c == '\n')
@@ -42,7 +46,7 @@ void    ft_getdir(char dir[20][20])
     }
     dir[i][j] = 0;
     fclose(file);
-    //system("rm tmp");
+    system("rm .tmp");
 }
 
 int     ft_dirlen(char dir[20][20])
@@ -66,8 +70,8 @@ int     main(void)
     char    *curdir;
    
     i = 0;
-    c = 49;
-    last = 49;
+    c = 0;
+    last = 0;
     cur = 0;
     ft_getdir(dir);
     dirlen = ft_dirlen(dir);
@@ -100,7 +104,7 @@ int     main(void)
             cur = 0;
             system("clear");
         }
-        if (c > last && cur == dirlen)
+        else if (c > last && cur == dirlen)
             cur = 0;   
         else if (c < last && cur == 0)
             cur = dirlen;
@@ -110,8 +114,8 @@ int     main(void)
             cur = cur;
         else
             cur--;
-        last = c;
         system("clear");
+        last = c;
         while (dir[i][0] != 0)
         {
             if (i == cur)
